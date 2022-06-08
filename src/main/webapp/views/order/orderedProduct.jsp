@@ -3,10 +3,12 @@
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <div class="">
 	<div class="d-grid gap-2 d-md-block">
-		<a href="" class="btn btn-danger btn-rounded"  type="button">Chờ xác nhận</a>
-		<a href="/ASSIGNMENT_JAVA5/orderedProduct1" class="btn btn-danger btn-rounded" type="button">Đang giao</a>
-		<a href="/ASSIGNMENT_JAVA5/orderedProduct2" class="btn btn-danger btn-rounded" type="button">Đã giao</a>
-		<a href="/ASSIGNMENT_JAVA5/orderedProduct3" class="btn btn-danger btn-rounded" type="button">Đã huỷ hàng</a>
+		<a href="/ASSIGNMENT_JAVA5/orderedProduct" class="btn btn-danger btn-rounded"  type="button">Chờ xác nhận</a>
+		<a href="/ASSIGNMENT_JAVA5/orderedProduct1" class="btn btn-danger btn-rounded" type="button">Chờ lấy hàng</a>
+		<a href="/ASSIGNMENT_JAVA5/orderedProduct2" class="btn btn-danger btn-rounded" type="button">Đang giao</a>
+		<a href="/ASSIGNMENT_JAVA5/orderedProduct3" class="btn btn-danger btn-rounded" type="button">Đã giao</a>
+		<a href="/ASSIGNMENT_JAVA5/orderedProduct4" class="btn btn-danger btn-rounded" type="button">Đã huỷ hàng</a>
+		<a href="/ASSIGNMENT_JAVA5/orderedProduct5" class="btn btn-danger btn-rounded" type="button">Đổi hàng</a>
 	</div>
 	<div class="row mt-3">
 		<div class="col-8">
@@ -41,11 +43,11 @@
 											đơn hàng</a></td>
 								</c:when>
 								<c:when test="${sp.status==1}">
-									<td><i class="text-success">Đã xác nhận</i></td>
+									<td><i class="text-success">Chờ lấy hàng</i></td>
 
 								</c:when>
 								<c:when test="${sp.status==2}">
-									<td><i class="text-danger">Đã huỷ hàng</i></td>
+									<td><i class="text-danger">Đang giao hàng</i></td>
 
 								</c:when>
 							</c:choose>

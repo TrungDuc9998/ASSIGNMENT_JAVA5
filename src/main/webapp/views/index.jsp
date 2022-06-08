@@ -1,12 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Home Controller</title>
 <link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/bootstrap.min.css">
-  
+
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style type="text/css">
@@ -25,8 +26,9 @@
 	pointer-events: none;
 	color: #aaa;
 }
-body{
-	width:98.8999999999999999999%;
+
+body {
+	width: 98.8999999999999999999%;
 }
 </style>
 </head>
@@ -47,12 +49,13 @@ body{
 
 			<div class="col-3 mt-4 text-center">
 				<img class="" src="/ASSIGNMENT_JAVA5/image/login.png">
-					
+				
+
 			</div>
 			<div class="col-1 "></div>
 		</div>
 		<nav class="navbar navbar-expand-lg "
-			style="background-color: rgb(61, 70, 77);width:100%!important">
+			style="background-color: rgb(61, 70, 77); width: 100% !important">
 			<div class="container-fluid">
 
 				<button class="navbar-toggler" type="button"
@@ -76,24 +79,24 @@ body{
 							<ul class="dropdown-menu bg-warning"
 								aria-labelledby="navbarDropdown">
 								<li><a class="dropdown-item" href="#">Đăng nhập</a></li>
-								<li><a class="dropdown-item" href="#">Đăng ký</a></li>
+								<li><a class="dropdown-item" href="/ASSIGNMENT_JAVA5/register">Đăng ký</a></li>
 								<li><hr class="dropdown-divider"></li>
-								<li><a class="dropdown-item" href="#">Quên mật khẩu</a></li>
+								<li><a class="dropdown-item" href="/ASSIGNMENT_JAVA5/logout">Đăng xuất</a></li>
 							</ul></li>
 						<li class="nav-item"><a class="nav-link text-light  fs-6"
 							href="/ASSIGNMENT_JAVA5/admin/accounts/show">Quản lý</a></li>
 						<li></li>
 					</ul>
 					<form class="d-flex me-5 ">
-						<a type="button" href="/ASSIGNMENT_JAVA5/cart">
-							<i class="fa fa-shopping-cart" style="font-size:36px;color:white"></i>
+						<a type="button" href="/ASSIGNMENT_JAVA5/cart"> <i
+							class="fa fa-shopping-cart" style="font-size: 36px; color: white"></i>
 						</a>
 
 					</form>
 					<form class="d-flex me-5">
 
 						<a type="button" href="/ASSIGNMENT_JAVA5/listfavoritebyaccountid">
-							<i class="fa fa-heart" style="font-size:36px;color:white"></i>
+							<i class="fa fa-heart" style="font-size: 36px; color: white"></i>
 						</a>
 					</form>
 				</div>
@@ -104,7 +107,7 @@ body{
 
 
 	<div class="container">
-		
+
 		<a class="btn btn-primary" data-bs-toggle="offcanvas"
 			href="#offcanvasExample" role="button"
 			aria-controls="offcanvasExample"> Menu </a>
@@ -123,7 +126,8 @@ body{
 					<i class="text-white mt-2 mb-2  fs-4 ">Admin</i>
 				</div>
 				<div class="mt-3">
-					<a href="/ASSIGNMENT_JAVA5/cartManagement" class=""><i class="fa fa-check"></i> Quản lý sản phẩm đặt</a>
+					<a href="/ASSIGNMENT_JAVA5/cartManagement" class=""><i
+						class="fa fa-check"></i> Quản lý sản phẩm đặt</a>
 				</div>
 				<div class="dropdown mt-3">
 					<button class="btn btn-primary dropdown-toggle" type="button"
@@ -138,7 +142,7 @@ body{
 
 					</ul>
 				</div>
-				
+
 
 				<div class="dropdown mt-3">
 					<button class="btn btn-secondary dropdown-toggle" type="button"
@@ -174,42 +178,42 @@ body{
 
 
 
-	
-		<div class="row bg-dark mt-4 text-light">
-			<div class="col-2 mt-4">
-				<img alt="" src="/ASSIGNMENT_JAVA5/image/Store.svg">
-			</div>
-			<div class="col-2 mt-4">
-				<h4>SẢN PHẨM</h4>
-				<p>Thời trang và phụ kiện</p>
-				<p>Sale-off</p>
-			</div>
-			<div class="col-2 mt-4">
-				<h4>VỀ CÔNG TY</h4>
-				<p>Lứa tuyển dụng</p>
-				<p>Liên hệ nhượng quyền</p>
 
-			</div>
-			<div class="col-2 mt-4">
-				<h4>HỖ TRỢ</h4>
-				<p>FAQS</p>
-				<p>Bảo mật thông tin</p>
-				<p>Chính sách chung</p>
-				<p>Tra cứu đơn hàng</p>
-			</div>
-			<div class="col-2 mt-4">
-				<h4>LIÊN HỆ</h4>
-				<p>Email góp ý</p>
-				<p>Hotline :0963 429 749</p>
-			</div>
-			<div class="col-2 mt-4">
-				<h4>ANANAS SOCIAL</h4>
-				<img alt="" src="/ASSIGNMENT_JAVA5/image/icon_facebook.svg"> <img
-					alt="" src="/ASSIGNMENT_JAVA5/image/icon_instagram.svg"> <img
-					alt="" src="/ASSIGNMENT_JAVA5/image/icon_youtube.svg">
-			</div>
+	<div class="row bg-dark mt-4 text-light">
+		<div class="col-2 mt-4">
+			<img alt="" src="/ASSIGNMENT_JAVA5/image/Store.svg">
 		</div>
-	
+		<div class="col-2 mt-4">
+			<h4>SẢN PHẨM</h4>
+			<p>Thời trang và phụ kiện</p>
+			<p>Sale-off</p>
+		</div>
+		<div class="col-2 mt-4">
+			<h4>VỀ CÔNG TY</h4>
+			<p>Lứa tuyển dụng</p>
+			<p>Liên hệ nhượng quyền</p>
+
+		</div>
+		<div class="col-2 mt-4">
+			<h4>HỖ TRỢ</h4>
+			<p>FAQS</p>
+			<p>Bảo mật thông tin</p>
+			<p>Chính sách chung</p>
+			<p>Tra cứu đơn hàng</p>
+		</div>
+		<div class="col-2 mt-4">
+			<h4>LIÊN HỆ</h4>
+			<p>Email góp ý</p>
+			<p>Hotline :0963 429 749</p>
+		</div>
+		<div class="col-2 mt-4">
+			<h4>ANANAS SOCIAL</h4>
+			<img alt="" src="/ASSIGNMENT_JAVA5/image/icon_facebook.svg"> <img
+				alt="" src="/ASSIGNMENT_JAVA5/image/icon_instagram.svg"> <img
+				alt="" src="/ASSIGNMENT_JAVA5/image/icon_youtube.svg">
+		</div>
+	</div>
+
 	<script src="/ASSIGNMENT_JAVA5/js/jquery.min.js"></script>
 	<script src="/ASSIGNMENT_JAVA5/js/popper.min.js"></script>
 	<script src="/ASSIGNMENT_JAVA5/js/bootstrap.min.js"></script>

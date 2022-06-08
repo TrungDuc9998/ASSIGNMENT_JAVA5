@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ASSIGNMENT_JAVA5.entities.Account;
 import ASSIGNMENT_JAVA5.entities.Product;
+import ASSIGNMENT_JAVA5.entities.ProductModel;
 import ASSIGNMENT_JAVA5.repositories.AccountRepository;
 import ASSIGNMENT_JAVA5.utils.EncryptUtil;
 import ASSIGNMENT_JAVA5.utils.UploadFileUtils;
@@ -120,5 +121,12 @@ public class AccountController {
 		System.out.println("----------------------------------------------"+acc.getPassword());
 		System.out.println(account.getId());
 		return "redirect:/admin/accounts/show";
+	}
+	
+	@GetMapping("createAccount")
+	public String createAccount(@ModelAttribute("product")ProductModel order) {
+		System.out.println("-------------- tạo tài khoản khi thêm hoá đơn -------------");
+		System.out.println(order.toString());
+		return "redirect:/home";
 	}
 }

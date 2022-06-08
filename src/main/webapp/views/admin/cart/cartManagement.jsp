@@ -3,7 +3,8 @@
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <div class="">
 	<div class="row">
-		<p class="text-center fw-bold fs-2 text-danger">QUẢN LÝ SẢN PHẨM ĐẶT</p>
+		<p class="text-center fw-bold fs-2 text-danger">QUẢN LÝ SẢN PHẨM
+			ĐẶT</p>
 	</div>
 	<div class="row">
 
@@ -23,7 +24,12 @@
 					<c:forEach var="item" items="${listOrder}">
 						<tr>
 							<td>${item.id}</td>
-							<td>${item.user.fullname}</td>
+							<td>
+								<c:choose>
+									<c:when test="${item.user.fullname!=null}">${item.user.fullname}</c:when>
+									<c:when test="${item.fullname!=null}">${item.fullname}</c:when>
+								</c:choose>
+							</td>
 							<td>${item.address}</td>
 							<td>${item.createdDate}</td>
 							<td>${item.total}</td>
@@ -32,7 +38,7 @@
 								class="btn btn-primary">Chi tiết</a></td>
 							<c:choose>
 								<c:when test="${item.status==0}">
-									<td><a type="button"
+									<td colspan="2"><a type="button"
 										href="/ASSIGNMENT_JAVA5/updateOrder/${item.id}"
 										class="btn btn-success">Xác nhận</a> <a type="button"
 										class="btn btn-danger"
@@ -40,13 +46,42 @@
 
 								</c:when>
 								<c:when test="${item.status==2}">
-									<td><i class="text-danger">Đã huỷ đơn</i></td>
+									<td><i class="text-danger">Đang giao hàng</i></td>
 								</c:when>
 								<c:when test="${item.status==1}">
-									<td><i class="text-success fw-bold">Đã xác nhận</i></td>
+									<td><i class="text-success fw-bold">Chờ lấy hàng</i></td>
 								</c:when>
 							</c:choose>
-
+							<td><c:choose>
+									<c:when test="${item.status==1}">
+										<button type="button" class="btn btn-success"
+											data-bs-toggle="modal" data-bs-target="#exampleModal${item.id}">
+											Xác nhận giao hàng</button>
+										<!-- Modal -->
+										<div class="modal fade" id="exampleModal${item.id}" tabindex="-1"
+											aria-labelledby="exampleModalLabel" aria-hidden="true">
+											<div class="modal-dialog">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title" id="exampleModalLabel">XÁC
+															NHẬN GIAO HÀNG</h5>
+														<button type="button" class="btn-close"
+															data-bs-dismiss="modal" aria-label="Close"></button>
+													</div>
+													<div class="modal-body">Bạn có muốn xác nhận giao
+														hàng không? ${item.id}</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-secondary"
+															data-bs-dismiss="modal">Không</button>
+														<a type="button"
+															href="/ASSIGNMENT_JAVA5/admin/order/deliveryConfirmation/${item.id}"
+															class="btn btn-primary">Có</a>
+													</div>
+												</div>
+											</div>
+										</div>
+									</c:when>
+								</c:choose></td>
 						</tr>
 					</c:forEach>
 
@@ -79,9 +114,11 @@
 											</a>
 										</c:when>
 									</c:choose></td>
+
 							</tr>
 						</c:forEach>
 					</tbody>
+					
 				</table>
 			</div>
 
