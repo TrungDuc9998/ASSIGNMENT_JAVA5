@@ -59,18 +59,37 @@ public class CardController {
 			System.out.println(orderDetail.getId());
 		}
 		model.addAttribute("list", list);
-		return "forward:/detailAccount/"+id;
+		return "forward:/cartManagement/";
 	}
 	
 	@GetMapping("detailAccount/{id}")
 	private String detailAccount(Model model,@PathVariable("id")Integer id) {
-		System.out.println("----------------idOrder:"+id);
+		System.out.println(request.getRequestURL());
+		System.out.println(request.getRequestURI());
+		Order order=this.orderRepo.getOne(id);
+		
+		
 		List<OrderDetail>list=this.orderDetailRepo.FindListOrderDetailByOrderId(id,0);
 		for (OrderDetail orderDetail : list) {
 			System.out.println(orderDetail.getId());
 		}
 		model.addAttribute("list", list);
-		return "forward:/orderedProduct";
+		if(order.getStatus()==0) {
+			return "forward:/orderedProduct";
+		}if(order.getStatus()==1) {
+			return "forward:/orderedProduct1";
+		}if(order.getStatus()==2) {
+			return "forward:/orderedProduct2";
+		}if(order.getStatus()==3) {
+			return "forward:/orderedProduct3";
+		}if(order.getStatus()==4) {
+			return "forward:/orderedProduct4";
+		}else{
+			return "forward:/orderedProduct5";
+		}
+
+		
+		
 	}
 	
 	@PostMapping("store/cart/{id}/{price}")

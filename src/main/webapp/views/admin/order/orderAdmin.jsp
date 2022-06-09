@@ -39,16 +39,20 @@
 					</div>
 
 				</div>
-				<div class="d-grid gap-2 d-md-block">
+				<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+					<button class="btn btn-primary btn-rounded ">Đặt hàng</button>
+					<a class="btn btn-danger" type="button" href="/ASSIGNMENT_JAVA5/admin/accounts/createAccount">Tạo tài khoản</a>
+				</div>
+			
 
 					<p>
-						<a class="btn btn-warning btn-rounded mt-3"
+						<a class="btn btn-warning btn-rounded"
 							data-bs-toggle="collapse" href="#collapseExample" role="button"
 							aria-expanded="false" aria-controls="collapseExample"> Chọn
 							sản phẩm </a>
 
 					</p>
-					<button class="btn btn-primary btn-rounded mb-3">Đặt hàng</button>
+					
 					<div class="collapse" id="collapseExample">
 						<div class="card card-body">
 
@@ -65,13 +69,14 @@
 								<tbody>
 									<c:forEach var="pro" items="${listPro}">
 										<tr>
-											<td><form:checkbox id="ck${pro.id}" path="product_id" onclick="check('${pro.id}')" value="${pro.id}" />
-											</td>
+											<td><form:checkbox id="ck${pro.id}" path="product_id"
+													onclick="check('${pro.id}')" value="${pro.id}" /></td>
 											<td>${pro.name}</td>
 											<td><img alt="" width="80px" height="80px"
 												src="/ASSIGNMENT_JAVA5/storage/${pro.image}"></td>
 											<td>${pro.price}</td>
-											<td><form:input path="quantity" id="ip${pro.id}" disabled="true" min="1" value="1" type="number" /></td>
+											<td><form:input path="quantity" id="ip${pro.id}"
+													disabled="true" min="1" value="1" type="number" /></td>
 										</tr>
 									</c:forEach>
 								</tbody>
@@ -80,7 +85,7 @@
 						</div>
 					</div>
 
-				</div>
+				
 
 
 

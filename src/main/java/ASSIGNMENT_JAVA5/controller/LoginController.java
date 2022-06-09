@@ -49,4 +49,18 @@ public class LoginController {
 		
 		
 	}
+	
+	@GetMapping("/logout")
+	public String logout() {
+		HttpSession session=request.getSession();
+		Account user=(Account) session.getAttribute("account");	
+		if (user != null) {  
+		    session.invalidate();
+		    return "redirect:/login";
+		}else {
+			System.out.println("Đăng xuất không thành công!");
+			return "redirect:/home";
+		}
+		
+	}
 }
