@@ -31,6 +31,27 @@ public class FavoriteController {
 	@Autowired
 	private HttpServletRequest request;
 	
+	@GetMapping("favorite/{id}")
+	public String favorite(
+			@PathVariable("id")Integer id,
+			Favorite favorite
+			) {
+		HttpSession session=request.getSession();
+		Account account=(Account)session.getAttribute("account");
+		if(account!=null) {
+			Product product=this.productRepo.getOne(id);
+			favorite.setIsLike(1);
+			favorite.setAccount(account);
+			favorite.setLikeDate(new Date());
+			favorite.setProduct(product);
+			this.favoriteRepo.save(favorite);
+			return "forward:/productDetails/"+id;
+		}else {
+			return "redirect:/home";
+		}
+		
+	}
+	
 	@GetMapping("favoriteinsert/{id}")
 	public String favoriteInsert(@PathVariable("id")Integer id,Favorite favorite) {
 		HttpSession session=request.getSession();

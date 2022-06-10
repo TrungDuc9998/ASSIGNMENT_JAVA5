@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
-
+<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 
 <div class="container">
 
@@ -69,7 +69,7 @@
 								<tbody>
 									<c:forEach var="pro" items="${listPro}">
 										<tr>
-											<td><form:checkbox id="ck${pro.id}" path="product_id"
+											<td><form:checkbox class="form-check-input" id="ck${pro.id}" path="product_id"
 													onclick="check('${pro.id}')" value="${pro.id}" /></td>
 											<td>${pro.name}</td>
 											<td><img alt="" width="80px" height="80px"

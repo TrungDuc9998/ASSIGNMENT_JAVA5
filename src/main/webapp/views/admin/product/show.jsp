@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 <div>
 	<div class=" bg-white mt-5 rounded">
 		<form:form action="/ASSIGNMENT_JAVA5/admin/products/show" modelAttribute="category">

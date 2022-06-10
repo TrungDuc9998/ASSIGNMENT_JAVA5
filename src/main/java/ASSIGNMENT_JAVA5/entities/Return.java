@@ -1,5 +1,8 @@
 package ASSIGNMENT_JAVA5.entities;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,40 +14,23 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
-@Data
 @Entity
-@Table(name="order_details")
-public class OrderDetail {
+@Table(name="returns")
+@Data
+public class Return {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
-	
-
-	@ManyToOne
-	@JoinColumn(name="product_id")
-	private Product product;
-	
-	@Column(name="price")
-	private double price;
-	
-	@Column(name="quantity")
-	private int quantity;
-	
-	@Column(name="status")
-	private int status;
-	
-	@Column(name="image")
-	private String image;
 	
 	@Column(name="note")
 	private String note;
 	
+	
+	@Column(name="image")
+	private String image;
+	
 	@ManyToOne
 	@JoinColumn(name="order_id")
 	private Order order;
-	
-	
-	
 }

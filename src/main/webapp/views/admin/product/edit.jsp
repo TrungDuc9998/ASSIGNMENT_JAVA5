@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
+<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 <div class=" mt-5">
 	<div class="row bg-white rounded">
 		<h5 class="mt-3 fw-bold">CẬP NHẬT SẢN PHẨM</h5>
@@ -27,6 +28,14 @@
 				<div class="form-group mb-3 mt-3">
 					<label>Product price:</label>
 					<form:input path="price" class="form-control" />
+				</div>
+				<div class="form-group mb-3 mt-3">
+					<label>Product size:</label>
+					<form:input path="color" class="form-control" />
+				</div>
+				<div class="form-group mb-3 mt-3">
+					<label>Product color:</label>
+					<form:input path="size" class="form-control" />
 				</div>
 				
 				<div class="form-group mb-3 mt-3">

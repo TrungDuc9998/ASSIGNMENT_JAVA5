@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,45 +40,69 @@ public class AccountController {
 
 	@Autowired
 	private UploadFileUtils uploadUtil;
-	
+
 	@Autowired
 	HttpServletRequest request;
 
-	
-	
-	
-	
-	
+	public void check(Model model, Account account) {
+		HttpSession session = request.getSession();
+		account = (Account) session.getAttribute("account");
+		if (account != null) {
+			model.addAttribute("account", account);
+		}
+	}
+
 	@GetMapping("create")
 	public String create(Model model, @ModelAttribute("account") Account acc) {
-		model.addAttribute("views", "/views/admin/accounts/create.jsp");
-		return "index";
+
+		HttpSession session = request.getSession();
+		Account account = (Account) session.getAttribute("account");
+		if (account.getAdmin() == 1 && account != null) {
+			model.addAttribute("views", "/views/admin/accounts/create.jsp");
+			return "index";
+		} else {
+			return "redirect:/home";
+		}
+
 	}
 
 	@GetMapping("edit/{id}")
 	public String edit(Model model, @ModelAttribute("account") Account acc, @PathVariable("id") Integer id) {
+		HttpSession session = request.getSession();
 
-		acc = accountRepo.getOne(id);
+		Account account = (Account) session.getAttribute("account");
+		if (account.getAdmin() == 1 && account != null) {
+			acc = accountRepo.getOne(id);
 
-		System.out.println("----id:" + acc);
-		model.addAttribute("views", "/views/admin/accounts/edit.jsp");
-		model.addAttribute("account", acc);
-//		acc.setPhoto(uploadFile.getOriginalFilename());
-//		File a=this.uploadUtil.handleUpLoadFile(uploadFile);
-		return "index";
+			System.out.println("----id:" + acc);
+			model.addAttribute("views", "/views/admin/accounts/edit.jsp");
+			model.addAttribute("account", acc);
+//			acc.setPhoto(uploadFile.getOriginalFilename());
+//			File a=this.uploadUtil.handleUpLoadFile(uploadFile);
+			return "index";
+		} else {
+			return "redirect:/home";
+		}
+
 	}
 
 	@GetMapping("show")
-	public String show(Model model, Account account,@RequestParam("p") Optional<Integer> p) {
-		
-		Pageable pageable=PageRequest.of(p.orElse(1), 3);
-		Page<Account>page=this.accountRepo.findAll(pageable);
-		model.addAttribute("page", page);
-		
-		
-		model.addAttribute("views", "/views/admin/accounts/show.jsp");
-		model.addAttribute("page", page);
-		return "index";
+	public String show(Model model, Account account, @RequestParam("p") Optional<Integer> p) {
+		HttpSession session = request.getSession();
+
+		Account account1 = (Account) session.getAttribute("account");
+		if (account1.getAdmin() == 1 && account1 != null) {
+			Pageable pageable = PageRequest.of(p.orElse(1), 3);
+			Page<Account> page = this.accountRepo.findAll(pageable);
+			model.addAttribute("page", page);
+
+			model.addAttribute("views", "/views/admin/accounts/show.jsp");
+			model.addAttribute("page", page);
+			return "index";
+		} else {
+			return "redirect:/home";
+		}
+
 	}
 
 	@GetMapping("delete/{id}")
@@ -88,7 +113,7 @@ public class AccountController {
 
 	@RequestMapping("store")
 	public String store(Model model, @Valid @ModelAttribute("account") Account account,
-			@RequestParam("upload_file") MultipartFile uploadFile,BindingResult result) {
+			@RequestParam("upload_file") MultipartFile uploadFile, BindingResult result) {
 //		if(result.hasErrors()==true) {
 //			System.out.println("lỗi");
 //			model.addAttribute("message", "lỗi");
@@ -100,7 +125,7 @@ public class AccountController {
 //
 //		}
 		account.setPhoto(uploadFile.getOriginalFilename());
-		String hashedPassword=EncryptUtil.hash(account.getPassword());
+		String hashedPassword = EncryptUtil.hash(account.getPassword());
 		account.setPassword(hashedPassword);
 		File a = this.uploadUtil.handleUpLoadFile(uploadFile);
 
@@ -113,18 +138,18 @@ public class AccountController {
 	public String update(@ModelAttribute("account") Account account, @PathVariable("id") int id,
 			@RequestParam("upload_file") MultipartFile uploadFile) {
 		account.setPhoto(uploadFile.getOriginalFilename());
-		Account acc=this.accountRepo.getOne(id);
+		Account acc = this.accountRepo.getOne(id);
 		File a = this.uploadUtil.handleUpLoadFile(uploadFile);
 		account.setId(id);
 		account.setPassword(acc.getPassword());
 		accountRepo.save(account);
-		System.out.println("----------------------------------------------"+acc.getPassword());
+		System.out.println("----------------------------------------------" + acc.getPassword());
 		System.out.println(account.getId());
 		return "redirect:/admin/accounts/show";
 	}
-	
-	@GetMapping("createAccount")
-	public String createAccount(@ModelAttribute("product")ProductModel order) {
+
+	@PostMapping("createAccount")
+	public String createAccount(@ModelAttribute("product") ProductModel order) {
 		System.out.println("-------------- tạo tài khoản khi thêm hoá đơn -------------");
 		System.out.println(order.toString());
 		return "redirect:/home";
