@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
-<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
+
 
 <div class="container">
 
@@ -68,7 +68,7 @@
 						</div>
 
 					</c:forEach>
-				
+
 				</div>
 				<hr>
 				<p class="text-danger fw-bold ">Tổng cộng : ${total}</p>
@@ -80,27 +80,67 @@
 				<!-- Modal -->
 				<div class="modal fade" id="exampleModal" tabindex="-1"
 					aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
+					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h5 class="modal-title" id="exampleModalLabel">FPT
-									POLYTECHNIC</h5>
+								<h5 class="modal-title" id="exampleModalLabel">THÊM SẢN
+									PHẨM ĐẶT HÀNG</h5>
 								<button type="button" class="btn-close" data-bs-dismiss="modal"
 									aria-label="Close"></button>
 							</div>
-							<div class="modal-body">...</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-secondary"
-									data-bs-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Save
-									changes</button>
+							<div class="modal-body">
+								<form:form action="/ASSIGNMENT_JAVA5/orderStore"
+									method="get" modelAttribute="product">
+									<table class="table">
+										<thead>
+											<tr>
+												<th>#</th>
+												<th>Tên sản phẩm</th>
+												<th>Hình ảnh</th>
+												<th>Giá tiền</th>
+												<th>Số lương</th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach var="pro" items="${listPro}">
+												<tr>
+													<td><form:checkbox class="form-check-input"
+															id="ck${pro.id}" path="product_id"
+															onclick="check('${pro.id}')" value="${pro.id}" /></td>
+													<td>${pro.name}</td>
+													<td><img alt="" width="80px" height="80px"
+														src="/ASSIGNMENT_JAVA5/storage/${pro.image}"></td>
+													<td>${pro.price}</td>
+													<td><form:input path="quantity" id="ip${pro.id}"
+															disabled="true" min="1" value="1" type="number" /></td>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Đóng</button>
+									<button  class="btn btn-primary">Thêm sản
+										phẩm</button>
+								</form:form>
 							</div>
+							
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>
 
 </div>
+<script>
+	function check(id) {
+		a = document.getElementById('ck' + id);
+		if (a.checked == true) {
+			document.getElementById('ip' + id).removeAttribute('disabled');
+		}
+		if (a.checked == false) {
+			document.getElementById('ip' + id).setAttribute('disabled', 'true');
+		}
+	}
+</script>

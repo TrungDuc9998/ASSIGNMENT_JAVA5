@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
-<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
+
 
 <div class="container">
 
@@ -41,7 +41,7 @@
 				</div>
 				<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
 					<button class="btn btn-primary btn-rounded ">Đặt hàng</button>
-					<a class="btn btn-danger" type="button" href="/ASSIGNMENT_JAVA5/admin/accounts/createAccount">Tạo tài khoản</a>
+					<a class="btn btn-danger" type="button" href="/ASSIGNMENT_JAVA5/admin/accounts/create">Tạo tài khoản</a>
 				</div>
 			
 

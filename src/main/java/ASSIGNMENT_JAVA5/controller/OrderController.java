@@ -62,59 +62,53 @@ public class OrderController {
 
 	@Autowired
 	private HttpServletRequest request;
-	
+
 	@Autowired
 	private UploadFileUtils uploadUtil;
 
 	private Order orderLast;
-	
-	
+
 	@GetMapping("order1/{price}/{id}")
-	public String order1(
-			Order order,
-			OrderDetail orderDetail,
-			@PathVariable("price")Double price,
-			@PathVariable("id")Integer id,
-			@RequestParam("name")String fullname,
-			@RequestParam("phone")String phone,
-			@RequestParam("address")String address,
-			@RequestParam("quantity")Integer quantity) {
-		HttpSession session=request.getSession();
-		Account account=(Account)session.getAttribute("account");
-		if(account!=null) {
+	public String order1(Order order, OrderDetail orderDetail, @PathVariable("price") Double price,
+			@PathVariable("id") Integer id, @RequestParam("name") String fullname, @RequestParam("phone") String phone,
+			@RequestParam("address") String address, @RequestParam("quantity") Integer quantity) {
+		HttpSession session = request.getSession();
+		Account account = (Account) session.getAttribute("account");
+		if (account != null) {
 			order.setAddress(address);
 			order.setCreatedDate(new Date());
 			order.setFullname(fullname);
 			order.setPhoneNumber(phone);
 			order.setUser(account);
-			order.setTotal(quantity*price);
+			order.setTotal(quantity * price);
 			this.orderRepo.save(order);
-			
-			List<Order>listOrder=this.orderRepo.findAllByEmail(account.getEmail());
-			
-			orderDetail.setOrder(listOrder.get(listOrder.size()-1));
+
+			List<Order> listOrder = this.orderRepo.findAllByEmail(account.getEmail());
+
+			orderDetail.setOrder(listOrder.get(listOrder.size() - 1));
 			orderDetail.setQuantity(quantity);
-			Product product=this.productRepo.getOne(id);
+			Product product = this.productRepo.getOne(id);
 			orderDetail.setProduct(product);
-			orderDetail.setPrice(quantity*price);
+			orderDetail.setPrice(quantity * price);
 			this.orderDetailRepo.save(orderDetail);
 			return "redirect:/orderedProduct";
-		}else {
+		} else {
 			return "redirect:/home";
 		}
-		
-		
+
 	}
 
 	@GetMapping("order")
-	public String order(Model model,
-
-			Order order, OrderDetail orderDetail) {
+	public String order(Model model, Order order, OrderDetail orderDetail,
+			@ModelAttribute("product") ProductModel pro) {
 
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
-		
+
 		List<Card> listCard = this.cartRepo.findAllCartByAccountId(account.getId());
+
+		List<Product> listPro = this.productRepo.findAll();
+		model.addAttribute("listPro", listPro);
 		double tong = 0;
 		for (Card list : listCard) {
 			tong += list.getPrice();
@@ -173,7 +167,7 @@ public class OrderController {
 			return "redirect:/order";
 		} else {
 
-			account = this.accountRepo.getOne(account.getId());		
+			account = this.accountRepo.getOne(account.getId());
 			List<Card> listCard = this.cartRepo.findAllCartByAccountId(account.getId());
 
 			if (listCard.isEmpty()) {
@@ -224,18 +218,95 @@ public class OrderController {
 
 	@RequestMapping("/admin/order")
 	public String adminOrder(Model model, @ModelAttribute("product") ProductModel pro) {
-		HttpSession session=request.getSession();
-		Account account=(Account)session.getAttribute("account");
+		HttpSession session = request.getSession();
+		Account account = (Account) session.getAttribute("account");
 		model.addAttribute("account", account);
-		if(account.getAdmin()==1) {
+		if (account.getAdmin() == 1) {
 			List<Product> listProduct = this.productRepo.findAll();
 			model.addAttribute("listPro", listProduct);
 			model.addAttribute("views", "/views/admin/order/orderAdmin.jsp");
 			return "index";
-		}else {
+		} else {
 			return "redirect:/home";
 		}
-		
+
+	}
+
+	@GetMapping("orderStore")
+	public String orderStore(@ModelAttribute("producut") ProductModel pro, Card cart, Product product) {
+
+		System.out.println(pro.toString());
+		HttpSession session = request.getSession();
+		Account account = (Account) session.getAttribute("account");
+		List<Integer> listProductId = pro.getProduct_id();
+		List<Integer> listQuantity = pro.getQuantity();
+		List<Card> listCardAll = this.cartRepo.findAllCartByAccountId(account.getId());
+
+		Boolean kt = false;
+		for (int i = 0; i < listProductId.size(); i++) {
+
+			if (listCardAll.get(i).getProduct().getId() != listProductId.get(i)) {
+
+				
+					System.out.println("------------------ sản phẩm không có trong giỏ hàng -------------------");
+					System.out.println("list card all" + listCardAll.get(i).getProduct().getId());
+					System.out.println("list Product id:" + listProductId.get(i));
+					List<Integer> listProductNew = new ArrayList<Integer>();
+					listProductNew.add(listProductId.get(i));
+					List<Card> listCard = new ArrayList<>();
+					for (Integer item : listProductNew) {
+						cart = new Card();
+						cart.setProduct(this.productRepo.getOne(item));
+						listCard.add(cart);
+					}
+
+					for (int j = 0; j < listCard.size(); j++) {
+						double pro_price = this.productRepo.findById1(pro.getProduct_id().get(j)).getPrice();
+						listCard.get(j).setQuantity(listQuantity.get(j));
+						listCard.get(j).setAccount(account);
+						listCard.get(j).setPrice(listQuantity.get(j) * pro_price);
+						this.cartRepo.save(listCard.get(j));
+					}
+				
+
+			} else {
+
+				if (listCardAll.get(i).getProduct().getId() == listProductId.get(i)) {
+					
+						System.out.println(
+								"^^^^^^^^^^^^^^^^^^^^^^^^^^^^ sản phẩm  có trong giỏ hàng -------------------------");
+						System.out.println(listProductId.get(i));
+
+						List<Integer> listProductNew = new ArrayList<Integer>();
+						listProductNew.add(listProductId.get(i));
+						List<Card> listCard = new ArrayList<>();
+						for (Integer item : listProductNew) {
+							cart = new Card();
+							cart.setProduct(this.productRepo.getOne(item));
+							listCard.add(cart);
+						}
+
+						for (int j = 0; j < listCard.size(); j++) {
+							Integer idCard = this.cartRepo.findByProductId(pro.getProduct_id().get(j)).getId();
+							double pro_price = this.productRepo.findById1(pro.getProduct_id().get(j)).getPrice();
+							Integer pro_quantity = this.cartRepo.findByProductId(pro.getProduct_id().get(j))
+									.getQuantity();
+							double cart_price = this.cartRepo.findByProductId(pro.getProduct_id().get(j)).getPrice();
+							listCard.get(j).setId(idCard);
+							listCard.get(j).setQuantity(listQuantity.get(j) + pro_quantity);
+							listCard.get(j).setAccount(account);
+							listCard.get(j).setPrice((pro_price) + cart_price);
+							this.cartRepo.save(listCard.get(j));
+						}
+					}
+
+				
+
+			}
+
+		}
+
+		return "redirect:/order";
 	}
 
 	@PostMapping("admin/orderStore")
@@ -342,7 +413,7 @@ public class OrderController {
 			this.orderRepo.save(order);
 		}
 
-		return "redirect:/home";
+		return "redirect:/ASSIGNMENT_JAVA5/orderedProduct";
 	}
 
 	@PostMapping("orderStore/{total}")
@@ -395,20 +466,21 @@ public class OrderController {
 		model.addAttribute("views", "/views/order/orderedProduct.jsp");
 		return "index";
 	}
-	
+
 	@GetMapping("orderedProduct4")
 	private String orderProduc4(Model model) {
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
 		if (account != null) {
-			
-			List<OrderDetail>listOrderDetai=this.orderDetailRepo.FindListOrderDetailByStatusAndAccountId(4, account.getId());
+
+			List<OrderDetail> listOrderDetai = this.orderDetailRepo.FindListOrderDetailByStatusAndAccountId(4,
+					account.getId());
 			for (OrderDetail orderDetail : listOrderDetai) {
-				System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"+orderDetail.getProduct().getName());
+				System.out
+						.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + orderDetail.getProduct().getName());
 			}
 			model.addAttribute("listsp", listOrderDetai);
-			
-			
+
 		} else {
 			System.out.println("chưa đăng nhập");
 		}
@@ -416,13 +488,14 @@ public class OrderController {
 		model.addAttribute("views", "/views/order/orderedProduct4.jsp");
 		return "index";
 	}
-	
+
 	@GetMapping("orderedProduct5")
 	private String orderProduc5(Model model) {
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
 		if (account != null) {
-			List<OrderDetail> listsp_dangGiao = this.orderDetailRepo.FindListOrderDetailByStatusAndAccountId(5, account.getId());
+			List<OrderDetail> listsp_dangGiao = this.orderDetailRepo.FindListOrderDetailByStatusAndAccountId(5,
+					account.getId());
 			for (OrderDetail orderDetail : listsp_dangGiao) {
 				System.out.println("----------------- sản phẩm Trả hàng ---------------");
 				System.out.println(orderDetail.getProduct().getName());
@@ -435,7 +508,7 @@ public class OrderController {
 		model.addAttribute("views", "/views/order/orderedProduct4.jsp");
 		return "index";
 	}
-	
+
 	@GetMapping("orderedProduct3")
 	private String orderProduc3(Model model) {
 		HttpSession session = request.getSession();
@@ -454,7 +527,6 @@ public class OrderController {
 		model.addAttribute("views", "/views/order/orderedProduct.jsp");
 		return "index";
 	}
-	
 
 	@GetMapping("orderedProduct2")
 	private String orderProduc2(Model model) {
@@ -474,10 +546,6 @@ public class OrderController {
 		model.addAttribute("views", "/views/order/orderedProduct.jsp");
 		return "index";
 	}
-
-	
-	
-	
 
 	@GetMapping("orderedProduct")
 	private String orderProduct(Model model) {
@@ -501,7 +569,7 @@ public class OrderController {
 	}
 
 	@GetMapping("orderCancellation/{id}")
-	private String orderCancellation(@PathVariable("id") Order order,Order order1) {
+	private String orderCancellation(@PathVariable("id") Order order, Order order1) {
 		System.out.println("-------id:" + order.getId());
 
 		order1.setStatus(4);
@@ -512,7 +580,7 @@ public class OrderController {
 		order1.setTotal(0);
 		order1.setCreatedDate(order.getCreatedDate());
 		this.orderRepo.save(order1);
-		List<OrderDetail>list=this.orderDetailRepo.FindListOrderDetailByOrderId(order.getId());
+		List<OrderDetail> list = this.orderDetailRepo.FindListOrderDetailByOrderId(order.getId());
 		for (OrderDetail orderDetail : list) {
 			orderDetail.setStatus(4);
 			this.orderDetailRepo.save(orderDetail);
@@ -522,9 +590,9 @@ public class OrderController {
 
 	@GetMapping("admin/deleteOrder/{id}")
 	private String deleteOrder(@PathVariable("id") Order order1, Order order) {
-		HttpSession session=request.getSession();
-		Account account=(Account)session.getAttribute("account");
-		if(account!=null) {
+		HttpSession session = request.getSession();
+		Account account = (Account) session.getAttribute("account");
+		if (account != null) {
 			account = this.accountRepo.getOne(account.getId());
 			System.out.println("------CreateDate:" + order1.getCreatedDate());
 			System.out.println("------Account:" + account.getId());
@@ -536,16 +604,16 @@ public class OrderController {
 			order.setFullname(order.getFullname());
 			order.setPhoneNumber(order.getPhoneNumber());
 			this.orderRepo.save(order);
-			List<OrderDetail>listOrderDetail=this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId());
+			List<OrderDetail> listOrderDetail = this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId());
 			for (OrderDetail orderDetail : listOrderDetail) {
 				orderDetail.setStatus(4);
 				this.orderDetailRepo.save(orderDetail);
 			}
 			return "redirect:/cartManagement";
-		}else {
+		} else {
 			return "redirect:/home";
 		}
-		 
+
 	}
 
 	@GetMapping("updateOrder/{id}")
@@ -562,7 +630,7 @@ public class OrderController {
 		order.setPhoneNumber(account.getPhoneNumber());
 		order.setTotal(order1.getTotal());
 		order.setAddress(order1.getAddress());
-		List<OrderDetail>listOrderDetail=this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId(),0);
+		List<OrderDetail> listOrderDetail = this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId(), 0);
 		for (OrderDetail orderDetail : listOrderDetail) {
 			System.out.println("------------9999999999999999999999999999999999------------");
 			System.out.println(orderDetail.getProduct().getName());
@@ -572,7 +640,7 @@ public class OrderController {
 		this.orderRepo.save(order);
 		return "redirect:/cartManagement";
 	}
-	
+
 	@RequestMapping("admin/order/deliveryConfirmation/{id}")
 	private String deliveryConfirmation(@PathVariable("id") Order order1, Order order) {
 		HttpSession session = request.getSession();
@@ -588,20 +656,21 @@ public class OrderController {
 		order.setTotal(order1.getTotal());
 		order.setAddress(order1.getAddress());
 		this.orderRepo.save(order);
-		List<OrderDetail>list=this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId(), 1);
+		List<OrderDetail> list = this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId(), 1);
 		for (OrderDetail orderDetail : list) {
 			orderDetail.setStatus(2);
 			this.orderDetailRepo.save(orderDetail);
 		}
-		
+
 		return "redirect:/cartManagement";
 	}
-	
+
 	@RequestMapping("returns/{id}")
-	public String returns(@PathVariable("id")Integer id,@RequestParam("upload_file") MultipartFile uploadFile,@RequestParam("note")String note) {
-		System.out.println("id để trả hàng:"+note+uploadFile.getOriginalFilename());
+	public String returns(@PathVariable("id") Integer id, @RequestParam("upload_file") MultipartFile uploadFile,
+			@RequestParam("note") String note) {
+		System.out.println("id để trả hàng:" + note + uploadFile.getOriginalFilename());
 		this.uploadUtil.handleUpLoadFile(uploadFile);
-		OrderDetail orderDetail=this.orderDetailRepo.getOne(id);
+		OrderDetail orderDetail = this.orderDetailRepo.getOne(id);
 		orderDetail.setId(orderDetail.getId());
 		orderDetail.setOrder(orderDetail.getOrder());
 		orderDetail.setQuantity(orderDetail.getQuantity());
@@ -612,13 +681,9 @@ public class OrderController {
 		this.orderDetailRepo.save(orderDetail);
 		return "redirect:/orderedProduct2";
 	}
-	
+
 	@GetMapping("receive/{id}")
-	public String receive(
-			@PathVariable("id")Order order1,
-			Order order,
-			OrderDetail orderDetail
-			) {
+	public String receive(@PathVariable("id") Order order1, Order order, OrderDetail orderDetail) {
 		order.setId(order1.getId());
 		order.setStatus(3);
 		order.setPhoneNumber(order1.getPhoneNumber());
@@ -628,7 +693,7 @@ public class OrderController {
 		order.setFullname(order1.getFullname());
 		order.setUser(order1.getUser());
 		this.orderRepo.save(order);
-		List<OrderDetail>list=this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId(), 2);
+		List<OrderDetail> list = this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId(), 2);
 		for (OrderDetail orderDetail2 : list) {
 			orderDetail2.setStatus(3);
 			this.orderDetailRepo.save(orderDetail2);

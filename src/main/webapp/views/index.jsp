@@ -109,7 +109,7 @@ body {
 
 	<div class="container">
 		<c:if test="${account.getAdmin()==1}">
-			<a class="btn btn-primary" data-bs-toggle="offcanvas"
+			<a class="btn btn-primary mt-2" data-bs-toggle="offcanvas"
 				href="#offcanvasExample" role="button"
 				aria-controls="offcanvasExample"> Menu </a>
 
