@@ -122,9 +122,14 @@ public class ProductController {
 		Product pro=this.proRepo.getOne(id);
 		product.setName(product.getName());
 		product.setId(id);
+		if(file.getOriginalFilename().equals("")) {
+			product.setImage(pro.getImage());
+		}else {
+			product.setImage(file.getOriginalFilename());
+		}
 		product.setCategory(pro.getCategory());
 		product.setCreatedDate(pro.getCreatedDate());
-		product.setImage(file.getOriginalFilename());
+		
 		this.proRepo.save(product);
 		return "redirect:/admin/products/show";
 		

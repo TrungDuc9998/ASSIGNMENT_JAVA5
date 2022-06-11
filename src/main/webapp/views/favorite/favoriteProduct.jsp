@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
+    <link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 <div class="row mt-5">
 		<h1>SẢN PHẨM ĐƯỢC YÊU THÍCH</h1>
 		<hr />

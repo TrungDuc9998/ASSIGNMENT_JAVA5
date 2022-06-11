@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
-
+<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 
 <div class="container">
 

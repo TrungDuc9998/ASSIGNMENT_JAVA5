@@ -69,7 +69,7 @@ public class CardController {
 		Order order=this.orderRepo.getOne(id);
 		
 		
-		List<OrderDetail>list=this.orderDetailRepo.FindListOrderDetailByOrderId(id,0);
+		List<OrderDetail>list=this.orderDetailRepo.FindListOrderDetailByOrderId(id);
 		for (OrderDetail orderDetail : list) {
 			System.out.println(orderDetail.getId());
 		}

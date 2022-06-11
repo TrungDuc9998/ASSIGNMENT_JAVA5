@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 <div class="container">
 	<div class="row">
 		<div class="col-12 bg-white mt-3">
@@ -32,7 +33,9 @@
 									
 								</td>
 								<td>${cart.product.name}</td>
-								<td></td>
+								<td>
+									<img alt="" src="/ASSIGNMENT_JAVA5/storage/${cart.product.image}" width="80px">
+								</td>
 
 								<td>${cart.product.color}</td>
 								<td>${cart.product.size}</td>

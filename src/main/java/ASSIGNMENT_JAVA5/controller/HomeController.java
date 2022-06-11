@@ -2,12 +2,16 @@ package ASSIGNMENT_JAVA5.controller;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,11 +69,19 @@ public class HomeController {
 	
 	
 	@RequestMapping("home")
-	public String home(Model model) {
+	public String home(Model model,@RequestParam("p") Optional<Integer> p) {
 //		index(model);
+		HttpSession session=request.getSession();
+		Account account=(Account)session.getAttribute("account");
+		if(account!=null) {
+			model.addAttribute("account", account);
+		}
+		Pageable pageable = PageRequest.of(p.orElse(0), 8);
+		Page<Product> listProduct = this.productRepo.findAll(pageable);
+		
 		List<Category>listCategoey=this.cateRepo.findAll();
 		model.addAttribute("listCategory", listCategoey);
-		List<Product>listProduct=this.productRepo.findAll();
+//		List<Product>listProduct=this.productRepo.findAll();
 		model.addAttribute("listProduct", listProduct);
 		model.addAttribute("views", "/views/home.jsp");
 		return "index";
@@ -81,6 +93,7 @@ public class HomeController {
 	public String findProductByCategoryId(@PathVariable("id")Integer id,Model model) {
 //		index(model);
 		System.out.println("categoryId:"+id);
+		
 		List<Product>listProduct=this.productRepo.findByIdPro(id);
 		
 		List<Category>listCategoey=this.cateRepo.findAll();
