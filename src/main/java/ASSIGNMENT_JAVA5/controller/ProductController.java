@@ -7,10 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ASSIGNMENT_JAVA5.entities.Account;
 import ASSIGNMENT_JAVA5.entities.Category;
 
 import ASSIGNMENT_JAVA5.entities.Product;
@@ -46,7 +52,7 @@ public class ProductController {
 	HttpServletRequest request;
 	
 	@GetMapping("create")
-	public String create(Model model,@ModelAttribute("product")Product product) {
+	public String create(Model model, @ModelAttribute("product")Product product) {
 		List<Category>listCategory=this.cateRepo.findAll();
 		model.addAttribute("listCategory", listCategory);
 		model.addAttribute("views", "/views/admin/product/create.jsp");
@@ -90,24 +96,37 @@ public class ProductController {
 	}
 	
 	@PostMapping("store")
-	public String store(@ModelAttribute("product")Product product,@RequestParam("cate_id")Integer id,
-			@RequestParam("upload_file_product")MultipartFile file
-			
+	public String store(
+			 Product product,
+			@RequestParam("cate_id")Integer id,
+			@RequestParam("upload_file_product")MultipartFile file,
+			Model model
 			) {
 		
+		HttpSession session=request.getSession();
+		Account account=(Account)session.getAttribute("account");
 		
-		this.upload.handleUpLoadFile(file);
-		product.setImage(file.getOriginalFilename());
-		Category cate=cateRepo.getOne(id);
-		System.out.println(id);
-		product.setCategory(cate);
-		product.setCreatedDate(new Date());
-		this.proRepo.save(product);
-		
-	
-		
-		  
-		
+		try {
+			if(product.getName().equals("")) {
+				session.setAttribute("name", "Tên sản phẩm không được trống!");
+			}if(product.getColor().equals("")) {
+				session.setAttribute("color", "Màu sản phẩm không được trống!");
+			}if(product.getPrice()==0.0) {
+				session.setAttribute("price", "Giá sản phẩm  phải lớn hơn 0!");
+			}if(file.getOriginalFilename().equals("")) {
+				session.setAttribute("image", "Vui lòng chọn ảnh sản phẩm!");
+			}else {
+				this.upload.handleUpLoadFile(file);
+				product.setImage(file.getOriginalFilename());
+				Category cate=cateRepo.getOne(id);
+				System.out.println(id);
+				product.setCategory(cate);
+				product.setCreatedDate(new Date());
+				this.proRepo.save(product);
+			}
+		} catch (Exception e) {
+			
+		}
 		
 		return "redirect:/admin/products/show";
 	}
