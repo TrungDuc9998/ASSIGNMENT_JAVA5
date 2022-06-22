@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jstl/core_rt" prefix="c"%>
+<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 <div>
 	<div class="row bg-white mt-5">
 		<table class="table ">

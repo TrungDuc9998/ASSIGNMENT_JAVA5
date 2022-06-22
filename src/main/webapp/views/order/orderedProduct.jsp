@@ -58,6 +58,7 @@
 											Nhận hàng
 										</a>
 									</td>
+									
 								</c:when>
 								<c:when test="${sp.status==3}">
 									<td>
@@ -102,7 +103,25 @@
 										<i class="text-danger fw-bold">Đã huỷ hàng</i>
 									</td>
 								</c:when>
-								<c:when test="${item.order.status==2 }">
+								<c:when test="${item.status==3}">
+									<td>
+										<i class="text-success">Đã nhận hàng</i>
+									</td>
+								</c:when>
+								<c:when test="${item.status==6}">
+									<td>
+										<i class="text-danger fw-bold">Đã gửi yêu cầu trả hàng</i>
+									</td>
+								</c:when>
+								<c:when test="${item.status==5}">
+									<td>
+										<i class="text-danger">Đã trả hàng</i>
+									</td>
+								</c:when>
+								<c:when test="${item.status!=5 && item.status!=1}">
+									<td>
+										<a type="button" class="btn btn-success mt-2" href="/ASSIGNMENT_JAVA5/receiveDetail/${item.order.id}/${item.id}/${item.product.id}">NHẬN HÀNG</a>
+									</td>
 									<td>
 										<!-- Button trigger modal -->
 										<button type="button" class="btn btn-primary"

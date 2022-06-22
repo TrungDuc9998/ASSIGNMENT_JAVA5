@@ -69,8 +69,8 @@
 										<!-- Button trigger modal -->
 										<button type="button" class="btn btn-danger"
 											data-bs-toggle="modal"
-											data-bs-target="#exampleModal${item.id}">Huỷ</button> <!-- Modal -->
-										<div class="modal fade" id="exampleModal${item.id}"
+											data-bs-target="#exampleModa${item.id}">Huỷ</button> <!-- Modal -->
+										<div class="modal fade" id="exampleModa${item.id}"
 											tabindex="-1" aria-labelledby="exampleModalLabel"
 											aria-hidden="true">
 											<div class="modal-dialog">
@@ -86,7 +86,7 @@
 													<div class="modal-footer">
 														<button type="button" class="btn btn-secondary"
 															data-bs-dismiss="modal">Không</button>
-														<button type="button" class="btn btn-primary">Có</button>
+														<a type="button" href="/ASSIGNMENT_JAVA5/admin/deleteOrder/${item.id}" class="btn btn-primary">Có</a>
 													</div>
 												</div>
 											</div>

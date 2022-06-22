@@ -49,6 +49,9 @@
 								<c:if test="${sp.status==4}">
 									<i class="fw-bold text-danger">Đã huỷ hàng</i>
 								</c:if>
+								<c:if test="${sp.status==3}">
+									<i class="text-success fw-bold">Đã giao hàng</i>
+								</c:if>
 							</td>
 
 						</tr>
