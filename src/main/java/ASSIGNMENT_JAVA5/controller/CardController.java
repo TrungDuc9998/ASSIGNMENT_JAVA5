@@ -59,6 +59,7 @@ public class CardController {
 			System.out.println(orderDetail.getId());
 		}
 		model.addAttribute("list", list);
+		//chi tiet don hang admin
 		return "forward:/cartManagement/";
 	}
 	
@@ -67,7 +68,7 @@ public class CardController {
 		System.out.println(request.getRequestURL());
 		System.out.println(request.getRequestURI());
 		Order order=this.orderRepo.getOne(id);
-		
+		//chi tiet sp dh
 		
 		List<OrderDetail>list=this.orderDetailRepo.FindListOrderDetailByOrderId(id);
 		for (OrderDetail orderDetail : list) {

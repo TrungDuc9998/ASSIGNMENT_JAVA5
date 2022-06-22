@@ -89,8 +89,8 @@
 									aria-label="Close"></button>
 							</div>
 							<div class="modal-body">
-								<form:form action="/ASSIGNMENT_JAVA5/orderStore"
-									method="get" modelAttribute="product">
+								<form:form action="/ASSIGNMENT_JAVA5/orderStore" method="get"
+									modelAttribute="product">
 									<table class="table">
 										<thead>
 											<tr>
@@ -102,6 +102,7 @@
 											</tr>
 										</thead>
 										<tbody>
+
 											<c:forEach var="pro" items="${listPro}">
 												<tr>
 													<td><form:checkbox class="form-check-input"
@@ -119,11 +120,10 @@
 									</table>
 									<button type="button" class="btn btn-secondary"
 										data-bs-dismiss="modal">Đóng</button>
-									<button  class="btn btn-primary">Thêm sản
-										phẩm</button>
+									<button class="btn btn-primary">Thêm sản phẩm</button>
 								</form:form>
 							</div>
-							
+
 						</div>
 					</div>
 				</div>

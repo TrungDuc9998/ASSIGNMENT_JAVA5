@@ -26,7 +26,7 @@
 							<c:when test="${item.isLike==0}">
 								<a class="btn btn-danger" type="button"
 								href="/ASSIGNMENT_JAVA5/favoriteupdate/${item.product.id}/${item.isLike}"> <i
-								class="fa fa-heart"> </i> Yêu thích
+								class="fa fa-heart"> </i> Like
 							</a>
 							</c:when>
 							<c:when test="${item.isLike==1}">
@@ -38,7 +38,7 @@
 						<c:otherwise>
 							<a class="btn btn-danger" type="button"
 								href="/ASSIGNMENT_JAVA5/favorite/${item.product.id}"> <i
-								class="fa fa-heart"> </i> Yêu thích
+								class="fa fa-heart"> </i> Like
 							</a>
 						</c:otherwise>
 						</c:choose>

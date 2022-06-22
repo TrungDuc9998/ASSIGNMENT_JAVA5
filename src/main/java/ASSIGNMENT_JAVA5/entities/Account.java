@@ -69,4 +69,7 @@ public class Account {
 	@OneToMany(mappedBy = "account")
 	private List<Favorite>favorites;
 	
+	@OneToMany(mappedBy = "account")
+	private List<Comment>comments;
+	
 }

@@ -123,12 +123,15 @@ public class ProductController {
 				product.setCategory(cate);
 				product.setCreatedDate(new Date());
 				this.proRepo.save(product);
+				return "redirect:/admin/products/show";
 			}
+			
 		} catch (Exception e) {
 			
 		}
 		
-		return "redirect:/admin/products/show";
+		return "redirect:/admin/products/create";
+		
 	}
 	
 	@PostMapping("update/{id}")

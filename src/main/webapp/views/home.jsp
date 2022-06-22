@@ -124,7 +124,7 @@
 		<hr />
 		<c:forEach var="item" items="${listCategory}">
 			<div class="col-3">
-				<div class="card ">
+				<div class="card mt-2">
 					<div class="card-body row ">
 
 						<div class="col-1"></div>

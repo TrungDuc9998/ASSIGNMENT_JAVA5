@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.hibernate.engine.query.spi.ParamLocationRecognizer.InFlightOrdinalParameterState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ASSIGNMENT_JAVA5.entities.Account;
 import ASSIGNMENT_JAVA5.entities.Card;
+import ASSIGNMENT_JAVA5.entities.Comment;
 import ASSIGNMENT_JAVA5.entities.Favorite;
 import ASSIGNMENT_JAVA5.entities.Order;
 import ASSIGNMENT_JAVA5.entities.OrderDetail;
@@ -30,6 +35,7 @@ import ASSIGNMENT_JAVA5.entities.Product;
 
 import ASSIGNMENT_JAVA5.repositories.AccountRepository;
 import ASSIGNMENT_JAVA5.repositories.CartRepository;
+import ASSIGNMENT_JAVA5.repositories.CommentRepository;
 import ASSIGNMENT_JAVA5.repositories.FavoriteRepository;
 import ASSIGNMENT_JAVA5.repositories.OrderDetailRepository;
 import ASSIGNMENT_JAVA5.repositories.OrderRepository;
@@ -60,6 +66,9 @@ public class OrderController {
 	@Autowired
 	private FavoriteRepository favoriteRepo;
 
+	@Autowired
+	private CommentRepository commentRepo;
+	
 	@Autowired
 	private HttpServletRequest request;
 
@@ -99,14 +108,21 @@ public class OrderController {
 	}
 
 	@GetMapping("order")
-	public String order(Model model, Order order, OrderDetail orderDetail,
-			@ModelAttribute("product") ProductModel pro) {
+	public String order(
+			Model model,
+			Order order, 
+			OrderDetail orderDetail,
+			@ModelAttribute("product") ProductModel pro
+			
+			) {
 
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
 
 		List<Card> listCard = this.cartRepo.findAllCartByAccountId(account.getId());
 
+		
+		
 		List<Product> listPro = this.productRepo.findAll();
 		model.addAttribute("listPro", listPro);
 		double tong = 0;
@@ -126,7 +142,10 @@ public class OrderController {
 
 	@RequestMapping("productDetails/{id}")
 	public String productDetails(Model model, @PathVariable("id") Integer id) {
-		System.out.println("--------------------------" + id);
+		
+		HttpSession session=request.getSession();
+		Account account=(Account)session.getAttribute("account");
+		model.addAttribute("account", account);
 
 		model.addAttribute("views", "/views/productDetails.jsp");
 		Product product = this.proRepo.getOne(id);
@@ -135,22 +154,27 @@ public class OrderController {
 		Favorite favorite = this.favoriteRepo.findFavoriteByProductId(product.getId());
 		model.addAttribute("favorite", favorite);
 
-		Product listPro = this.productRepo.findProductByNameAndSizeAndColor("", "", "");
-		model.addAttribute("listColor", listPro);
+//		Product listPro = this.productRepo.findProductByNameAndSizeAndColor("", "", "");
+//		model.addAttribute("listColor", listPro);
+		
+		
+		List<Comment>listComment=this.commentRepo.listCommentByProductID(id);
+		model.addAttribute("listComment", listComment);
 
 		return "index";
 	}
 
-	@PostMapping("cardstore")
-	public String cardStore(Model model) {
-		return "redirect:/card";
-	}
+//	@PostMapping("cardstore")
+//	public String cardStore(Model model) {
+//		return "redirect:/card";
+//	}
 
 	@GetMapping("orderDetails")
 	public String orderDetails(Model model, Card cart, @RequestParam("name") String name,
 			@RequestParam("color") String color, @RequestParam("size") String size,
 			@RequestParam("quantity") Integer quantity) {
 
+		//thua
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
 
@@ -235,6 +259,7 @@ public class OrderController {
 	@GetMapping("orderStore")
 	public String orderStore(@ModelAttribute("producut") ProductModel pro, Card cart, Product product) {
 
+		System.out.println("---------- them san pham khi chuan bi dat hang -----------------");
 		System.out.println(pro.toString());
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
@@ -295,7 +320,7 @@ public class OrderController {
 							listCard.get(j).setId(idCard);
 							listCard.get(j).setQuantity(listQuantity.get(j) + pro_quantity);
 							listCard.get(j).setAccount(account);
-							listCard.get(j).setPrice((pro_price) + cart_price);
+							listCard.get(j).setPrice((pro_price*listQuantity.get(j)) + cart_price);
 							this.cartRepo.save(listCard.get(j));
 						}
 					}
@@ -312,6 +337,7 @@ public class OrderController {
 	@PostMapping("admin/orderStore")
 	public String orderStoreAdmin(@ModelAttribute("product") ProductModel pro, Order order, OrderDetail orderDetail) {
 
+		System.out.println("------ them hoa don va hdct cua admin ----------");
 		System.out.println(pro.toString());
 		System.out.println(pro.getQuantity());
 
@@ -330,7 +356,7 @@ public class OrderController {
 			this.orderRepo.save(order);
 
 			List<Order> listOrderLast = this.orderRepo.findAllByEmail(pro.getEmail());
-			if (listOrderLast == null) {
+			if (listOrderLast.equals(" ")) {
 				System.out.println("------ list orderLast Null ----");
 			} else {
 				orderLast = listOrderLast.get(listOrderLast.size() - 1);
@@ -372,7 +398,11 @@ public class OrderController {
 			System.out.println(" không có email ");
 			order.setUser(null);
 			this.orderRepo.save(order);
+			
+			System.out.println("---------------- số điện thoại của hoá đơn cuối cùng"+pro.getPhone());
 			List<Order> listOrderLast = this.orderRepo.findAllByPhone(pro.getPhone());
+			
+			
 			if (listOrderLast == null) {
 				System.out.println("------ list orderLast Null ----");
 			} else {
@@ -413,7 +443,7 @@ public class OrderController {
 			this.orderRepo.save(order);
 		}
 
-		return "redirect:/ASSIGNMENT_JAVA5/orderedProduct";
+		return "redirect:/cartManagement";
 	}
 
 	@PostMapping("orderStore/{total}")
@@ -445,7 +475,7 @@ public class OrderController {
 			this.orderDetailRepo.save(orderDetail);
 			this.cartRepo.delete(card);
 		}
-		return "redirect:/home";
+		return "redirect:/orderedProduct";
 	}
 
 	@GetMapping("orderedProduct1")
@@ -511,21 +541,42 @@ public class OrderController {
 
 	@GetMapping("orderedProduct3")
 	private String orderProduc3(Model model) {
+		
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
 		if (account != null) {
-			List<Order> listsp_dangGiao = this.orderRepo.findAllByAccountIdAndSatus(account.getId(), 3);
-			for (Order order : listsp_dangGiao) {
-				System.out.println("----------------- sản phẩm đã huỷ hàng ---------------");
-				System.out.println(order.getId());
+			List<OrderDetail> listsp_dangGiao = this.orderDetailRepo.FindListOrderDetailByStatusAndAccountId(3,
+					account.getId());
+			for (OrderDetail orderDetail : listsp_dangGiao) {
+				System.out.println("----------------- sản phẩm đã giao ---------------");
+				System.out.println(orderDetail.getProduct().getName());
 			}
 			model.addAttribute("listsp", listsp_dangGiao);
 		} else {
 			System.out.println("chưa đăng nhập");
 		}
 
-		model.addAttribute("views", "/views/order/orderedProduct.jsp");
+		model.addAttribute("views", "/views/order/orderedProduct4.jsp");
 		return "index";
+		
+		
+		
+		
+//		HttpSession session = request.getSession();
+//		Account account = (Account) session.getAttribute("account");
+//		if (account != null) {
+//			List<Order> listsp_dangGiao = this.orderRepo.findAllByAccountIdAndSatus(account.getId(), 3);
+//			for (Order order : listsp_dangGiao) {
+//				System.out.println("----------------- sản phẩm đã giao ---------------");
+//				System.out.println(order.getId());
+//			}
+//			model.addAttribute("listsp", listsp_dangGiao);
+//		} else {
+//			System.out.println("chưa đăng nhập");
+//		}
+//
+//		model.addAttribute("views", "/views/order/orderedProduct.jsp");
+//		return "index";
 	}
 
 	@GetMapping("orderedProduct2")
@@ -570,7 +621,7 @@ public class OrderController {
 
 	@GetMapping("orderCancellation/{id}")
 	private String orderCancellation(@PathVariable("id") Order order, Order order1) {
-		System.out.println("-------id:" + order.getId());
+		System.out.println("------- huy dong hàng khi dang ơ trang thai tro xac nhạn ---------" );
 
 		order1.setStatus(4);
 		order1.setUser(order.getUser());
@@ -590,6 +641,7 @@ public class OrderController {
 
 	@GetMapping("admin/deleteOrder/{id}")
 	private String deleteOrder(@PathVariable("id") Order order1, Order order) {
+		//huy don hang phia admin
 		HttpSession session = request.getSession();
 		Account account = (Account) session.getAttribute("account");
 		if (account != null) {
@@ -632,7 +684,7 @@ public class OrderController {
 		order.setAddress(order1.getAddress());
 		List<OrderDetail> listOrderDetail = this.orderDetailRepo.FindListOrderDetailByOrderId(order1.getId(), 0);
 		for (OrderDetail orderDetail : listOrderDetail) {
-			System.out.println("------------9999999999999999999999999999999999------------");
+			//xác nhận đơn hàng phía admin
 			System.out.println(orderDetail.getProduct().getName());
 			orderDetail.setStatus(1);
 			this.orderDetailRepo.save(orderDetail);
@@ -643,6 +695,7 @@ public class OrderController {
 
 	@RequestMapping("admin/order/deliveryConfirmation/{id}")
 	private String deliveryConfirmation(@PathVariable("id") Order order1, Order order) {
+		//xac nhận giao hang phía admin
 		HttpSession session = request.getSession();
 		Account acc = (Account) session.getAttribute("account");
 		Account account = this.accountRepo.getOne(acc.getId());
@@ -665,10 +718,27 @@ public class OrderController {
 		return "redirect:/cartManagement";
 	}
 
+	
+	@GetMapping("returnsOrder/{id}")
+	public String returnsOrder(
+			@PathVariable("id")Integer id
+			) {
+//		Order order=this.orderRepo.getOne(id);
+//		order.setAddress(order.getAddress());
+//		order.setId(order.getId());
+//		order.setCreatedDate(order.getCreatedDate());
+//		order.setFullname(order.getFullname());
+//		order.setStatus(5);
+//		order.set
+		
+		return "redirect:/orderedProduct2";
+	}
+	
 	@RequestMapping("returns/{id}")
 	public String returns(@PathVariable("id") Integer id, @RequestParam("upload_file") MultipartFile uploadFile,
 			@RequestParam("note") String note) {
-		System.out.println("id để trả hàng:" + note + uploadFile.getOriginalFilename());
+		System.out.println(" ------------ yeu cau tra hang ------------");
+//		System.out.println("id để trả hàng:" + note + uploadFile.getOriginalFilename());
 		this.uploadUtil.handleUpLoadFile(uploadFile);
 		OrderDetail orderDetail = this.orderDetailRepo.getOne(id);
 		orderDetail.setId(orderDetail.getId());
@@ -684,6 +754,7 @@ public class OrderController {
 
 	@GetMapping("receive/{id}")
 	public String receive(@PathVariable("id") Order order1, Order order, OrderDetail orderDetail) {
+		System.out.println("-------------- nhan hang ------------");
 		order.setId(order1.getId());
 		order.setStatus(3);
 		order.setPhoneNumber(order1.getPhoneNumber());

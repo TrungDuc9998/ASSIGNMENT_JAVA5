@@ -17,7 +17,7 @@
 					<c:when test="${favorite.isLike==0}">
 						<a class="btn btn-danger" type="button"
 							href="/ASSIGNMENT_JAVA5/favoriteupdate/${product.id}/${favorite.isLike}">
-							<i class="fa fa-heart"> </i> Yêu thích
+							<i class="fa fa-heart"> </i> Like
 						</a>
 					</c:when>
 					<c:when test="${favorite.isLike==1}">
@@ -29,7 +29,7 @@
 					<c:otherwise>
 						<a class="btn btn-danger" type="button"
 							href="/ASSIGNMENT_JAVA5/favorite/${product.id}"> <i
-							class="fa fa-heart"> </i> Yêu thích
+							class="fa fa-heart"> </i> Like
 						</a>
 					</c:otherwise>
 				</c:choose>
@@ -65,6 +65,38 @@
 				</div>
 			</div>
 
+		</div>
+	</div>
+	<div class="row bg-white ms-1 rounded mt-4">
+		<p class=" fs-4 ms-2 mt-2">Bình luận</p>
+		<div class="col-12 comments">
+			<p class="ms-2">10 bình luận</p>
+			<form action="/ASSIGNMENT_JAVA5/admin/accounts/comment/${product.id}"
+				method="post">
+				<div class="row">
+					<div class="col-3 mt-2">
+						<p class="text-center">Mời nhập bình luận:</p>
+					</div>
+					<div class="col-6 mt-2">
+						<input class="form-control" name="content">
+					</div>
+					<div class="col-3">
+						<button class="btn btn-primary btn-rounded">Bình luận</button>
+					</div>
+				</div>
+			</form>
+			<c:forEach items="${listComment}" var="comment">
+				<div class="row">
+					<div class="col-1 text-center">
+							<img alt="" src="/ASSIGNMENT_JAVA5/storage/${comment.account.photo}" class="rounded-circle" style="width:50px;height:50px">	
+					</div>
+					<div class="col-11">
+						<h5 class=""> ${comment.account.fullname}</h5>
+						<p class="fs-7" style="margin-top:-10px">${comment.date}</p>
+						<p>${comment.content }</p>
+					</div>
+				</div>	
+			</c:forEach>
 		</div>
 	</div>
 </div>

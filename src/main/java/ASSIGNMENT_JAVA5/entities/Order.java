@@ -52,8 +52,7 @@ public class Order {
 	@OneToMany(mappedBy = "order")
 	private List<OrderDetail>orderDetails;
 	
-	@OneToMany(mappedBy = "order")
-	private List<Return>returns;
+	
 	
 	
 }

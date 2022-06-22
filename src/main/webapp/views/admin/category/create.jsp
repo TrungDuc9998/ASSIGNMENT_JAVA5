@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<link rel="stylesheet" href="/ASSIGNMENT_JAVA5/css/mdb.min.css">
 <div class="row">
 	<div class="col-3"></div>
 	<div class="col-6 mb-5" style="margin-top:100px">
